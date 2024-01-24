@@ -1,5 +1,7 @@
 <?php
+session_start();
 require_once '/app/env/variables.php';
+require_once '/app/request/users.php';
 ?>
 <!DOCTYPE html>
 <html lang="fr">
@@ -13,6 +15,7 @@ require_once '/app/env/variables.php';
 </head>
 
 <body>
+    <?php var_dump(findAllUsers()); ?>
     <?php require_once './layout/header.php'; ?>
     <main>
         <h1>Hello world</h1>

@@ -20,6 +20,11 @@ body {
     font-size: 1em;
 }
 
+body{
+    background: radial-gradient(var(--white), silver);
+    height: 100vh;
+}
+
 a {
     color: inherit;
     text-decoration: none;
@@ -37,6 +42,9 @@ ol {
     list-style: none;
 }
 
+main{
+    text-align: center;
+}
 .container {
     width: 90%;
     margin: auto;
@@ -46,6 +54,8 @@ ol {
     padding: 0.5em 1em;
     border-radius: var(--border-radius);
     transition: 0.4s ease;
+    border: none;
+    cursor: pointer;
 }
 
 .btn-primary {
@@ -72,10 +82,19 @@ ol {
     margin: 1em auto;
 }
 
-.alert-danger {
+.alert-danger,
+.btn-danger {
     background: rgba(198, 29, 29, 0.8);
     border: 1px solid rgb(198, 29, 29);
     color: var(--white);
+}
+
+.mt-2{
+    margin-top: 1rem;
+}
+
+.text-center{
+    text-align: center;
 }
 
 /******************************* NAVBAR ********************************/
@@ -88,10 +107,54 @@ ol {
     display: flex;
     align-items: center;
     justify-content: space-between;
+    gap: 1em;
 }
 
 .navbar-links {
     display: flex;
     gap: 1em;
     align-items: center;
+}
+
+.navbar-btn{
+    margin-left: auto;
+}
+
+/*************** FORM **************/
+
+.form{
+    border-radius: var(--border-radius);
+    background: var(--white);
+    border: 1px solid var(--primary);
+    padding: 1em 5em;
+    margin: 1em auto;
+    width: max-content;
+    box-shadow: 1px 0px 8px 8px silver;
+}
+
+.groupe-input{
+    margin-bottom: 1em;
+}
+
+form label{
+    display: block;
+    margin-bottom: 0.5em;
+}
+
+input,
+textarea{
+    border: 1px solid var(--secondary);
+    padding: 0.5em 1em;
+    border-radius: var(--border-radius);
+    margin-bottom: 1em;
+}
+
+input:focus,
+textarea:focus{
+    border: 1px solid var(--primary);
+}
+
+form button{
+    display: block;
+    margin: auto;
 }

@@ -1,5 +1,5 @@
 <?php
-
+session_start();
 require_once '/app/env/variables.php';
 //verif qu'on a uploadé une image et pas d'erreur
 if (!empty($_FILES['image']) && $_FILES['image']['error'] === 0){
