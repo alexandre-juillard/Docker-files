@@ -77,6 +77,26 @@ function updateUser(int $id, string $firstName, string $lastName, string $email,
     return true;
 }
 /**
+ * Undocumented function
+ *
+ * @param integer $id
+ * @return boolean
+ */
+function deleteUser(int $id): bool {
+    global $db;
+    try{
+        $sqlStatement = $db->prepare("DELETE FROM users WHERE id = :id");
+        $sqlStatement->execute([
+            'id' => $id,
+        ]);
+
+    }
+    catch(PDOException $error){
+        return false;
+    }
+    return true;
+}
+/**
  * function to find user by id
  *
  * @param integer $id
