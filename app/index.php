@@ -15,7 +15,6 @@ require_once '/app/request/users.php';
 </head>
 
 <body>
-    <?php var_dump(findAllUsers()); ?>
     <?php require_once './layout/header.php'; ?>
     <main>
         <h1>Hello world</h1>

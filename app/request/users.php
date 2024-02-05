@@ -18,7 +18,7 @@ function findAllUsers(): array{
 function findOneUserByEmail(string $email) :bool|array{
     global $db;
     $sqlStatement = $db->prepare("
-    SELECT firstName, lastName, email, password FROM users WHERE email = :email");
+    SELECT firstName, lastName, email, password, roles FROM users WHERE email = :email");
     $sqlStatement->execute(['email' => $email],);
 
     return $sqlStatement->fetch();
@@ -48,4 +48,45 @@ function createUser(string $firstName, string $lastName, string $email, string $
         return false;
     }
     return true;
-} 
+}   
+/**
+ * Undocumented function
+ *
+ * @param integer $id
+ * @param string $firstName
+ * @param string $lastName
+ * @param string $email
+ * @param ?array $roles
+ * @return boolean
+ */
+function updateUser(int $id, string $firstName, string $lastName, string $email, ?array $roles) :bool {
+    global $db;
+    try{
+        $sqlStatement = $db->prepare("UPDATE users SET firstName = :firstName, lastName = :lastName, email = :email, roles = :roles WHERE id = :id");
+        $sqlStatement->execute([
+            'id' => $id,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'email' => $email, 
+            'roles' => $roles ? json_encode($roles) : null,
+        ]);
+    }
+    catch(PDOException $error){
+        return false;
+    }
+    return true;
+}
+/**
+ * function to find user by id
+ *
+ * @param integer $id
+ * @return boolean|array
+ */
+    function findOneUserById(int $id) :bool|array{
+        global $db;
+        $sqlStatement = $db->prepare("SELECT * FROM users WHERE id = :id");
+        $sqlStatement ->execute([
+            'id' => $id,
+        ]);
+        return $sqlStatement->fetch();
+    } 

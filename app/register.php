@@ -25,6 +25,7 @@ if( //verif que les champs sont biens remplis
                 //on redirige vers page de connexion
                 http_response_code(302);
                 header("Location: /login.php");
+                exit();
             }
             else{
                 $errorMessage = "Une erreur est survenue, veuillez réessayer";
