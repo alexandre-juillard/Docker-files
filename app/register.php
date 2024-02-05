@@ -11,7 +11,7 @@ if( //verif que les champs sont biens remplis
     !empty($_POST['password'])
 ){ 
     //nettoyage des données
-    $firstName = strip_tags($_POST['firstname']); //recupere que les chanes
+    $firstName = strip_tags($_POST['firstname']); //recupere que les chaines
     $lastName = strip_tags($_POST['lastname']); //recupere que les chaines
     $email = filter_input(INPUT_POST, 'email', FILTER_VALIDATE_EMAIL); //verif si email est propre
     $password = password_hash($_POST['password'], PASSWORD_ARGON2I); // hash le password avec algo
