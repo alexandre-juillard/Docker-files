@@ -35,7 +35,7 @@ if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
         $_SESSION['messages']['success'] = 'Article ajouté avec succès';
         //envoie en base données
         http_response_code(302);
-        header("Location: /admin/articles");
+        header("Location: /admin/article");
         exit();
 
         } else {

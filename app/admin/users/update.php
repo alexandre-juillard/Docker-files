@@ -37,7 +37,7 @@ if(!empty($_POST['firstName']) &&
     if ($email) {
         $oldEmail = $user['email'];
 
-        if($oldEmail === $email || findOneUserByEmail($email)) {
+        if($oldEmail === $email || !findOneUserByEmail($email)) {
             if(updateUser($user['id'],$firstName, $lastName, $email, $roles)) {
                 $_SESSION['messages']['success'] = "Utilisateur modifié avec succès";
                 

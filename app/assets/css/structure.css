@@ -98,7 +98,7 @@ ol {
 }
 
 .alert-success{
-    background: lightgreen;
+    background: rgb(28, 153, 28);
     color: var(--white);
 }
 
