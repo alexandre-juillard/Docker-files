@@ -53,4 +53,15 @@ function createArticle(string $title, string $description, int $enable) :bool {
         return false;
     }
     return true;
-}   
+} 
+
+/**
+ * Undocumented function
+ *
+ * @param string $date
+ * @param string $format
+ * @return string
+ */
+function convertDateArticle(string $date, string $format): string {
+    return (new DateTime($date))->format($format);
+}
