@@ -18,7 +18,7 @@ if (!empty($_FILES['image']) && $_FILES['image']['error'] === 0){
         //on vérifie si extension du fichier est autorisé
         if(in_array($extension, $extensionAllowed)){
             $fileName = $fileInfo['filename'] . '_' . (new DateTime())->format('Y-m-d_H:i:s') .'.'. $extension;
-            move_uploaded_file($_FILES['image']['tmp_name'], '/app/upload/$fileName');
+            move_uploaded_file($_FILES['image']['tmp_name'], "/app/upload/$fileName");
         }
     }
 }

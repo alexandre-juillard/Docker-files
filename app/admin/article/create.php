@@ -23,6 +23,7 @@ if(
     !empty($_POST['title']) &&
     !empty($_POST['description'])
 ){
+   
     //nettoyage données//
     $title = strip_tags($_POST['title']);
     $description = strip_tags($_POST['description']);
@@ -31,7 +32,11 @@ if(
     //verifier si titre est unique
 if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
 
-    if(createArticle($title, $description, $enable)) {  //creer fonction create Article
+    if($_FILES['image']['size'] > 0 && $_FILES['image']['error'] ===0){
+        $imageName = uploadArticleImage($_FILES['image']);
+    }
+
+    if(createArticle($title, $description, $enable, isset($imageName) ? $imageName : null)) {  //creer fonction create Article en bd
         $_SESSION['messages']['success'] = 'Article ajouté avec succès';
         //envoie en base données
         http_response_code(302);
@@ -63,7 +68,7 @@ if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
     <main>
         <section class="container mt-2">
             <h1 class="text-center">Creation des articles</h1>
-            <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST" class="form mt-2">
+            <form action="<?= $_SERVER['PHP_SELF']; ?>" method="POST" class="form mt-2" enctype="multipart/form-data">
             <?php if (isset($errorMessage)) :?>
                 <div class="alert alert-danger">
                     <?= $errorMessage; ?>
@@ -76,6 +81,10 @@ if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
             <div class="group-input">
                 <label for="description">Description: </label>
                 <textarea name="description" id="description" cols="30" rows="10"></textarea>
+            </div>
+            <div class="group-input">
+                <label for="image">Image: </label>
+                <input type="file" name="image" id="image">
             </div>
             <div class="group-input checkbox">
                 <input type="checkbox" name="enable" id="enable">

@@ -36,9 +36,13 @@ $_SESSION['token'] = bin2hex(random_bytes(50));
         <section class="container mt-2">
         <?php require_once '/app/layout/notif.php'; ?>
             <h1 class="text-center">Admin des articles</h1>
+            <a href="/admin/article/create.php" class="btn btn-primary">Créer un article</a>
             <div class="card-list">
                 <?php foreach(findAllArticles() as $article) : ?>
                     <div class="card">
+                        <?php if($article['imageName']): ?>
+                            <img src="/upload/articles/<?= $article['imageName']; ?>" alt="" loading="lazy">
+                        <?php endif; ?>
                         <h2 class="card-header"><?= $article['title']; ?></h2>
                         <p><strong>Description:</strong><?= substr($article['description'], 0, 25) . '...'; ?></p>
                         <em><strong>Date de création: </strong><?= convertDateArticle($article['createdAt'], 'd/m/Y'); ?></em>

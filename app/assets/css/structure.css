@@ -23,7 +23,7 @@ body {
 
 body{
     background: radial-gradient(var(--white), silver);
-    height: 100vh;
+    min-height: 100vh;
 }
 
 a {
@@ -217,6 +217,7 @@ form button{
     justify-content: space-between;
     align-items: center;
     gap: 1em;
+    flex-wrap: wrap;
 }
 
 .card-list > .card{

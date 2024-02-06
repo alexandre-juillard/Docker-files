@@ -35,7 +35,11 @@ if(!empty($_POST['title']) &&
         $oldTitle = $article['title'];
 
         if($oldTitle === $title || !findOneArticleByTitle($title)) {
-            if(updateArticle($article['id'],$title, $description, $enable)) {
+            if(isset ($_FILES['image']) && $_FILES['image']['size'] > 0 && $_FILES['image']['error'] === 0){
+                $imageName = uploadArticleImage($_FILES['image'], $article['imageName']);
+            }
+        
+            if(updateArticle($article['id'],$title, $description, $enable, isset($imageName) ? $imageName : null)) {
                 $_SESSION['messages']['success'] = "Article modifié avec succès";
                 
                 http_response_code(302);
@@ -73,7 +77,7 @@ if(!empty($_POST['title']) &&
         <?php require_once '/app/layout/notif.php'; ?>
         <section class="container mt-2">
             <h1 class="text-center">Modifier un article</h1>
-            <form action="<?= $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" method="POST" class="form">
+            <form action="<?= $_SERVER['PHP_SELF'] . '?id=' . $_GET['id']; ?>" method="POST" class="form" enctype="multipart/form-data">
             <?php if (isset($errorMessage)) :?>
                 <div class="alert alert-danger">
                     <?= $errorMessage; ?>
@@ -86,6 +90,13 @@ if(!empty($_POST['title']) &&
             <div class="group-input">
                 <label for="description">Description: </label>
                 <textarea name="description" id="description" cols="70" rows="10" required><?= $article['description'];?></textarea>
+            </div>
+            <div class="group-input">
+                <label for="image">Image:</label>
+                <input type="file" name="image" id="image">
+                <?php if ($article['imageName']) : ?>
+                    <img src="/upload/articles/<?= $article['imageName']; ?>" alt="" loading="lazy">
+                <?php endif; ?>
             </div>
             <div class="group-input checkbox">
                 <input type="checkbox" name="enable" id="enable" <?= $article['enable']? 'checked' : null;?>>
