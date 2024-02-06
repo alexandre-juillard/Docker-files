@@ -4,7 +4,7 @@
     --border-radius: 5px;
     --font-color: #0e0e0e;
     --white: #f1f1f1;
-    --default-box-shadow: 1px 0px 8px 8px silver;
+    --default-box-shadow: 1px 0px 8px 5px rgb(111, 111, 111);
 }
 
 * {
@@ -131,6 +131,40 @@ ol {
 
 .navbar-btn{
     margin-left: auto;
+}
+
+.dropdown{
+    display: inline-block;
+    position: relative;
+}
+
+.dropdown-content{
+    position: absolute;
+    top: 100%;
+    min-width: 10em;
+    background: var(--secondary);
+    border-radius: var(--border-radius);
+    box-shadow: var(--default-box-shadow);
+    display: none;
+    flex-direction: column;
+    gap: 0.6em;
+    justify-content: center;
+    align-items: center;
+
+}
+
+.dropdown-content a{
+    width: 100%;
+    text-align: center;
+    padding: 1em 0;
+}
+
+.dropdown-content a:not(:first-child) {
+    border-top: 1px solid grey;
+}
+
+.dropdown:hover .dropdown-content{
+    display: flex;
 }
 
 /*************** FORM **************/

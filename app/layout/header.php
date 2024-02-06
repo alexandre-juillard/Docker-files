@@ -10,7 +10,13 @@
         <li class="navbar-links">
             <?php if(!empty($_SESSION['LOGGED_USER'])): ?>
                 <?php if(in_array('ROLE_ADMIN', $_SESSION['LOGGED_USER']['roles'])): ?>
-                    <a href="/admin" class="btn btn-secondary">Admin Mod</a>
+                    <div class="dropdown">
+                        <a class="btn btn-secondary">Admin</a>
+                        <div class="dropdown-content">
+                            <a href="/admin/users">Users</a>
+                            <a href="/admin/article">Articles</a>
+                        </div>
+                    </div>
                 <?php endif;?>
                 <a href="/logout.php" class="btn btn-danger">Se déconnecter</a>
             <?php else: ?>

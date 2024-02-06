@@ -32,7 +32,7 @@ if(
 if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
 
     if(createArticle($title, $description, $enable)) {  //creer fonction create Article
-        $_SESSION['messages']['succes'] = 'Article ajouté avec succès';
+        $_SESSION['messages']['success'] = 'Article ajouté avec succès';
         //envoie en base données
         http_response_code(302);
         header("Location: /admin/articles");
