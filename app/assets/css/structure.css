@@ -224,6 +224,11 @@ form button{
     width: 30%;
 }
 
+.card img{
+    aspect-ratio: 1/1;
+    object-fit: contain;
+}
+
 .card{
     border-radius: var(--border-radius);
     border: 1px solid grey;

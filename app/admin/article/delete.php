@@ -19,8 +19,8 @@ $article = findOneArticleById(isset($_POST['id']) ? $_POST['id'] : 0);
 if ($article) {
     if (hash_equals($_SESSION['token'], $_POST['token'])) {
         if(deleteArticle($article['id'])) {
-            if ($article['imageName'] && file_exists("app/upload/articles/$article[imageName]")) {
-                unlink("app/upload/articles/$article[imageName]");
+            if ($article['imageName'] && file_exists("/app/upload/articles/$article[imageName]")) {
+                unlink("/app/upload/articles/$article[imageName]");
             }
 
             $_SESSION['message']['success'] = "Article supprimé avec succès";
