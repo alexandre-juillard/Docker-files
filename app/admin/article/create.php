@@ -36,7 +36,7 @@ if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
         $imageName = uploadArticleImage($_FILES['image']);
     }
 
-    if(createArticle($title, $description, $enable, isset($imageName) ? $imageName : null)) {  //creer fonction create Article en bd
+    if(createArticle($title, $description, $enable, $_SESSION['LOGGED_USER']['id'], isset($imageName) ? $imageName : null)) {  //creer fonction create Article en bd
         $_SESSION['messages']['success'] = 'Article ajouté avec succès';
         //envoie en base données
         http_response_code(302);

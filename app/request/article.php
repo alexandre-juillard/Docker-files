@@ -15,6 +15,18 @@ function findAllArticles(): array {
     return $sqlStatement->fetchAll();
 }
 
+function findAllArticlesWithAuthor(): array {
+    global $db;
+    $query = "SELECT a.id, a.title, a.description, a.createdAt, a.enable, a.imageName,
+    u.firstName, u.lastName 
+    FROM article a JOIN users u ON a.auteur_id = u.id";
+
+    $sqlStatement = $db->prepare($query);
+    $sqlStatement->execute();
+
+    return $sqlStatement->fetchAll();
+}
+
 /**
  * Undocumented function
  *
@@ -54,21 +66,22 @@ function findOneArticleById(int $id) :bool|array {
  * @param string $imageName
  * @return boolean
  */
-function createArticle(string $title, string $description, int $enable, ?string $imageName): bool {
+function createArticle(string $title, string $description, int $enable,int $auteur_id, ?string $imageName ): bool {
     global $db;
     try{
         $params = [
             'title' => $title,
             'description' => $description,
             'enable' => $enable,
+            'auteur_id' => $auteur_id,
         ];
         
         if($imageName) {
-            $query = "INSERT INTO article(title, description, enable, imageName) VALUE(:title, :description, :enable, :imageName)";
+            $query = "INSERT INTO article(title, description, enable, imageName, auteur_id) VALUE(:title, :description, :enable, :imageName, :auteur_id)";
             $params['imageName'] = $imageName;
         }
         else {
-            $query = "INSERT INTO article(title, description, enable) VALUE(:title, :description, :enable)";
+            $query = "INSERT INTO article(title, description, enable, auteur_id) VALUE(:title, :description, :enable, :auteur_id)";
         }
         $sqlStatement = $db->prepare($query);
         $sqlStatement->execute($params);
