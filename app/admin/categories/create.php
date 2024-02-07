@@ -23,20 +23,20 @@ if (
 //verifi si les champs sont remplis//
 if (
     !empty($_POST['title']) &&
-    !empty($_FILES['image']['name'])
+    !empty($_FILES['image']['name']) //les images de type file sont dans superglobal FILES
 ) {
 
     //nettoyage données//
     $title = strip_tags($_POST['title']);
-
-    //verifier si titre est unique
+    $imageName = uploadCategorieImage($_FILES['image']);
+    //verifier si titre existe deja
     if (!findOneCategorieByTitle($title)) {
 
         if ($_FILES['image']['size'] > 0 && $_FILES['image']['error'] === 0) {
-            $imageName = uploadCategorieImage($_FILES['image']);
+            
             
             if (createCategorie($title, $imageName)) {
-                $_SESSION['messages']['success'] = 'Article ajouté avec succès';
+                $_SESSION['messages']['success'] = 'Catégorie ajoutée avec succès';
                 //envoie en base données
                 http_response_code(302);
                 header("Location: /admin/categories");
@@ -48,9 +48,9 @@ if (
             $errorMessage = 'Image non valide';
         }
     } else {
-        $errorMessage = 'Titre déjà existant';
+        $errorMessage = 'Titre déjà utilisé';
     }
-} else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+} else if ($_SERVER['REQUEST_METHOD'] === 'POST') { //evite message erreur au chargement
     $errorMessage = 'Veuillez remplir tous les champs obligatoires';
 }
 

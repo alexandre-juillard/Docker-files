@@ -50,7 +50,7 @@ $_SESSION['token'] = bin2hex(random_bytes(50));
                         <h2 class="card-header"><?= $categorie['title']; ?></h2>                       
                         <div class="card-btn">
                             <a href="/admin/categories/update.php?id=<?= $categorie['id'];?>" class="btn btn-primary">Editer</a>
-                            <form action="/admin/categories/delete.php" method="POST" onsubmit="return confirm('Etes vous sur de vouloir supprimer cet categorie?')">
+                            <form action="/admin/categories/delete.php" method="POST" onsubmit="return confirm('Etes vous sur de vouloir supprimer cette catégorie?')">
                                 <input type="hidden" name="id" value="<?= $categorie['id']; ?>">
                                 <input type="hidden" name="token" value="<?= $_SESSION['token']; ?>">
                                 <button type="submit" class="btn btn-danger">Supprimer</button>

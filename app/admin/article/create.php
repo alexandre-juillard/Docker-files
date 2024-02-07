@@ -6,6 +6,7 @@ session_start();
 //connexion base de données/import fichier function article//
 require_once '/app/env/variables.php';
 require_once '/app/request/article.php';
+require_once '/app/request/categories.php';
 
 //verif droit utilisateur//
 if(empty($_SESSION['LOGGED_USER']) || 
@@ -21,13 +22,15 @@ if(empty($_SESSION['LOGGED_USER']) ||
 //verifi si les champs sont remplis//
 if(
     !empty($_POST['title']) &&
-    !empty($_POST['description'])
+    !empty($_POST['description']) &&
+    !empty($_POST['categories'])
 ){
    
     //nettoyage données//
     $title = strip_tags($_POST['title']);
     $description = strip_tags($_POST['description']);
     $enable = isset($_POST['enable']) ? 1 : 0; //pas besoin d'écrire true car renvoie la valeur de isset qui est true
+    $categorie = filter_input(INPUT_POST, 'categories', FILTER_VALIDATE_INT);
 
     //verifier si titre est unique
 if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
@@ -36,15 +39,15 @@ if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
         $imageName = uploadArticleImage($_FILES['image']);
     }
 
-    if(createArticle($title, $description, $enable, $_SESSION['LOGGED_USER']['id'], isset($imageName) ? $imageName : null)) {  //creer fonction create Article en bd
+    if(createArticle($title, $description, $enable, $_SESSION['LOGGED_USER']['id'], isset($imageName) ? $imageName : null, $categorie)) {  //creer fonction create Article en bd
         $_SESSION['messages']['success'] = 'Article ajouté avec succès';
         //envoie en base données
         http_response_code(302);
         header("Location: /admin/article");
         exit();
-
+        
         } else {
-                $errorMessage = "Une erreur est survenue, veuillez réessayer";
+                $errorMessage = "Une erreur est survenue, veuillez réessayer";var_dump($_POST);
         }    
     } else {
             $errorMessage = "Le titre existe déjà";
@@ -86,6 +89,15 @@ if(!findOneArticleByTitle($title)) { //creer fonction findArticleById
                 <label for="image">Image: </label>
                 <input type="file" name="image" id="image">
             </div>
+            <div class="group-input">
+                    <label for="categories"></label>
+                    <select name="categories" id="categories">
+                        <option value="" disabled selected>--Choisir une catégorie--</option>
+                    <?php foreach(findAllCategories() as $categorie) : ?>
+                        <option value="<?= $categorie['id'];?>"><?= "$categorie[title]"; ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
             <div class="group-input checkbox">
                 <input type="checkbox" name="enable" id="enable">
                 <label for="enable">Actif</label>

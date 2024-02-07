@@ -7,7 +7,8 @@ require_once '/app/config/mysql.php';
  *
  * @return array
  */
-function findAllArticles(): array {
+function findAllArticles(): array
+{
     global $db;
     $sqlStatement = $db->prepare("SELECT * FROM article");  //preparer une requete SQL
     $sqlStatement->execute(); //execute la requet sql
@@ -15,11 +16,14 @@ function findAllArticles(): array {
     return $sqlStatement->fetchAll();
 }
 
-function findAllArticlesWithAuthor(): array {
+function findAllArticlesWithAuthor(): array
+{
     global $db;
     $query = "SELECT a.id, a.title, a.description, a.createdAt, a.enable, a.imageName,
-    u.firstName, u.lastName 
-    FROM article a JOIN users u ON a.auteur_id = u.id";
+    u.firstName, u.lastName , c.title AS categTitle
+    FROM article a 
+    JOIN users u ON a.auteur_id = u.id
+    JOIN categories c ON a.categorie_id = c.id";
 
     $sqlStatement = $db->prepare($query);
     $sqlStatement->execute();
@@ -33,14 +37,15 @@ function findAllArticlesWithAuthor(): array {
  * @param string $title
  * @return boolean|array
  */
-function findOneArticleByTitle(string $title): bool|array{
+function findOneArticleByTitle(string $title): bool|array
+{
     global $db;
     $sqlStatement = $db->prepare("SELECT * FROM article WHERE title = :title");
     $sqlStatement->execute([
         'title' => $title,
     ]);
     return $sqlStatement->fetch();
-} 
+}
 
 /**
  * Undocumented function
@@ -48,11 +53,12 @@ function findOneArticleByTitle(string $title): bool|array{
  * @param integer $id
  * @return boolean|array
  */
-function findOneArticleById(int $id) :bool|array {
+function findOneArticleById(int $id): bool|array
+{
     global $db;
     $sqlStatement = $db->prepare("SELECT * FROM article WHERE id = :id");
     $sqlStatement->execute([
-        'id'=>$id,
+        'id' => $id,
     ]);
     return $sqlStatement->fetch();
 }
@@ -66,31 +72,32 @@ function findOneArticleById(int $id) :bool|array {
  * @param string $imageName
  * @return boolean
  */
-function createArticle(string $title, string $description, int $enable,int $auteur_id, ?string $imageName ): bool {
+function createArticle(string $title, string $description, int $enable, int $auteur_id, ?string $imageName, int $categorie_id): bool
+{
     global $db;
-    try{
+    try {
         $params = [
             'title' => $title,
             'description' => $description,
             'enable' => $enable,
             'auteur_id' => $auteur_id,
+            'categorie_id' => $categorie_id,
         ];
-        
-        if($imageName) {
-            $query = "INSERT INTO article(title, description, enable, imageName, auteur_id) VALUE(:title, :description, :enable, :imageName, :auteur_id)";
+
+        if ($imageName) {
+            $query = "INSERT INTO article(title, description, enable, imageName, auteur_id, categorie_id) VALUE(:title, :description, :enable, :imageName, :auteur_id, :categorie_id)";
             $params['imageName'] = $imageName;
-        }
-        else {
-            $query = "INSERT INTO article(title, description, enable, auteur_id) VALUE(:title, :description, :enable, :auteur_id)";
+        } else {
+            $query = "INSERT INTO article(title, description, enable, auteur_id, categorie_id) VALUE(:title, :description, :enable, :auteur_id, :categorie_id)";
         }
         $sqlStatement = $db->prepare($query);
         $sqlStatement->execute($params);
-    }
-    catch(PDOException $error) {
+    } catch (PDOException $error) {
+        // die($error->getMessage());
         return false;
     }
     return true;
-} 
+}
 
 /**
  * Undocumented function
@@ -100,30 +107,30 @@ function createArticle(string $title, string $description, int $enable,int $aute
  * @param string $description
  * @return boolean
  */
-function updateArticle(int $id, string $title, string $description, int $enable, ?string $imageName): bool {
- global $db;
- try{
-    $query = "UPDATE article SET title = :title, description = :description, enable = :enable";
-    $params = [
-        'id' => $id,
-        'title' => $title,
-        'description' => $description,
-        'enable' => $enable,
-    ];
+function updateArticle(int $id, string $title, string $description, int $enable, ?string $imageName): bool
+{
+    global $db;
+    try {
+        $query = "UPDATE article SET title = :title, description = :description, enable = :enable";
+        $params = [
+            'id' => $id,
+            'title' => $title,
+            'description' => $description,
+            'enable' => $enable,
+        ];
 
-    if($imageName){
-        $query .= ", imageName = :imageName";
-        $params['imageName'] = $imageName;
+        if ($imageName) {
+            $query .= ", imageName = :imageName";
+            $params['imageName'] = $imageName;
+        }
+
+        $query .= " WHERE id = :id";
+        $sqlStatement = $db->prepare($query);
+        $sqlStatement->execute($params);
+    } catch (PDOException $error) {
+        return false;
     }
-
-    $query .= " WHERE id = :id";
-    $sqlStatement = $db->prepare($query);
-    $sqlStatement->execute($params);
- }
- catch(PDOException $error){
-    return false;
-}
-return true; 
+    return true;
 }
 
 /**
@@ -133,24 +140,26 @@ return true;
  * @param string $format
  * @return string
  */
-function convertDateArticle(string $date, string $format): string {
+function convertDateArticle(string $date, string $format): string
+{
     return (new DateTime($date))->format($format);
 }
 
-function uploadArticleImage(array $image, ?string $oldImageName = null): bool|string {
-    if($image['size'] < 16000000) {
+function uploadArticleImage(array $image, ?string $oldImageName = null): bool|string
+{
+    if ($image['size'] < 16000000) {
         $fileInfo = pathinfo($image['name']);
-        $extension= $fileInfo['extension'];
+        $extension = $fileInfo['extension'];
         $extensionAllowed = ['png', 'jpg', 'jpeg', 'webp', 'gif', 'svg'];
-    
-        if(in_array($extension, $extensionAllowed)) {
+
+        if (in_array($extension, $extensionAllowed)) {
             $fileName = $fileInfo['filename'] //reprend nom pur du fichier
-            . '_' . //concatenation
-            (new DateTime())->format('Y-m-d_H:i:s') //ajoute date du serveur instant T
-            .'.'. $extension; //concatenation de l extension
+                . '_' . //concatenation
+                (new DateTime())->format('Y-m-d_H:i:s') //ajoute date du serveur instant T
+                . '.' . $extension; //concatenation de l extension
             move_uploaded_file($image['tmp_name'], "/app/upload/articles/$fileName");
 
-            if($oldImageName && file_exists("/app/upload/articles/$oldImageName")) {
+            if ($oldImageName && file_exists("/app/upload/articles/$oldImageName")) {
                 unlink("/app/upload/articles/$oldImageName");
             }
 
@@ -160,17 +169,16 @@ function uploadArticleImage(array $image, ?string $oldImageName = null): bool|st
     return false;
 }
 
-function deleteArticle(int $id): bool {
+function deleteArticle(int $id): bool
+{
     global $db;
-    try{
+    try {
         $sqlStatement = $db->prepare("DELETE FROM article WHERE id= :id");
         $sqlStatement->execute([
             'id' => $id,
         ]);
-
-    }
-    catch(PDOException $error){
+    } catch (PDOException $error) {
         return false;
-}
-return true;
+    }
+    return true;
 }

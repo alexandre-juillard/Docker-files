@@ -31,29 +31,26 @@ if (!$categorie) {
 if (!empty($_POST['title'])) {
     $title = strip_tags($_POST['title']);
 
-    if ($categorie) {
-        $oldTitle = $categorie['title'];
+    if ($_FILES['image']['size'] > 0 && $_FILES['image']['error'] === 0) {
+        $imageName = uploadCategorieImage($_FILES['image'], $categorie['imageName']);
+    }
 
-        if ($oldTitle === $title || !findOneCategorieByTitle($title)) {
-            if (isset($_FILES['image']) && $_FILES['image']['size'] > 0 && $_FILES['image']['error'] === 0) {
-                $imageName = uploadCategorieImage($_FILES['image'], $categorie['imageName']);
-            }
+    $oldTitle = $categorie['title'];
 
-            if (updateCategorie($categorie['id'], $title, isset($imageName) ? $imageName : null)) {
-                $_SESSION['messages']['success'] = "Catégorie modifiée avec succès";
+    if ($oldTitle === $title || !findOneCategorieByTitle($title)) {
 
-                http_response_code(302);
-                header("Location: /admin/categories");
+        if (updateCategorie($categorie['id'], $title, isset($imageName) ? $imageName : null)) {
+            $_SESSION['messages']['success'] = "Catégorie modifiée avec succès";
 
-                exit();
-            } else {
-                $errorMessage = 'Une erreur est survenue';
-            }
+            http_response_code(302);
+            header("Location: /admin/categories");
+
+            exit();
         } else {
-            $errorMessage = 'Titre déjà existant';
+            $errorMessage = 'Une erreur est survenue';
         }
     } else {
-        $errorMessage = 'Veuillez rentrer un titre';
+        $errorMessage = 'Titre déjà existant';
     }
 } else if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errorMessage = 'Veuillez remplir tous les champs obligatoires';
@@ -89,9 +86,7 @@ if (!empty($_POST['title'])) {
                 <div class="group-input">
                     <label for="image">Image:</label>
                     <input type="file" name="image" id="image">
-                    <?php if ($categorie['imageName']) : ?>
-                        <img src="/upload/categories/<?= $categorie['imageName']; ?>" alt="" loading="lazy">
-                    <?php endif; ?>
+                    <img src="/upload/categories/<?= $categorie['imageName']; ?>" alt="" loading="lazy">
                 </div>
                 <button type="submit" class="btn btn-primary">Valider les modifications</button>
             </form>
