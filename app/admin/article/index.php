@@ -49,10 +49,8 @@ $_SESSION['token'] = bin2hex(random_bytes(50));
                         <h2 class="card-header"><?= $article['title']; ?></h2>
                         <p><strong>Description:</strong><?= substr($article['description'], 0, 25) . '...'; ?></p>
                         <em><strong>Date de création: </strong><?= convertDateArticle($article['createdAt'], 'd/m/Y'); ?></em>
-
                         <p><strong>Disponible: </strong><?= $article['enable']; ?></p>
                         <p><em><strong>Auteur: </strong><?= $article['firstName'], $article['lastName']; ?></em></p>
-
                         <p><em><strong>Catégorie: </strong><?= $article['categTitle']; ?></em></p>
                         <div class="card-btn">
                             <a href="/admin/article/update.php?id=<?= $article['id']; ?>" class="btn btn-primary">Editer</a>

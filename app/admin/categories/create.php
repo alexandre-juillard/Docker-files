@@ -33,8 +33,8 @@ if (
     if (!findOneCategorieByTitle($title)) {
 
         if ($_FILES['image']['size'] > 0 && $_FILES['image']['error'] === 0) {
-            
-            
+
+
             if (createCategorie($title, $imageName)) {
                 $_SESSION['messages']['success'] = 'Catégorie ajoutée avec succès';
                 //envoie en base données

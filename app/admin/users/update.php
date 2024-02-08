@@ -107,7 +107,7 @@ if(!empty($_POST['firstName']) &&
                 <input type="checkbox" name="roles[]" id="role-admin" value="ROLE_ADMIN" <?= $user['roles'] ? (in_array('ROLE_ADMIN', json_decode($user['roles'])) ? 'checked' : null) : null ;?>>
                 <label for="role-admin">Administrateur</label>
             </div>
-            <button type="submit" class="btn btn-primary">S'incrire</button>
+            <button type="submit" class="btn btn-primary">Valider les modif</button>
             </form>
         </section>
     </main>

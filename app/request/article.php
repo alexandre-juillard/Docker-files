@@ -23,8 +23,8 @@ function findAllArticlesWithAuthor(): array
     u.firstName, u.lastName , c.title AS categTitle
     FROM article a 
     JOIN users u ON a.auteur_id = u.id
-    JOIN categories c ON a.categorie_id = c.id";
-
+    LEFT JOIN categories c ON a.categorie_id = c.id";
+//left join pour récuperer tous les articles meme ceux sans categorie
     $sqlStatement = $db->prepare($query);
     $sqlStatement->execute();
 
@@ -72,7 +72,7 @@ function findOneArticleById(int $id): bool|array
  * @param string $imageName
  * @return boolean
  */
-function createArticle(string $title, string $description, int $enable, int $auteur_id, ?string $imageName, int $categorie_id): bool
+function createArticle(string $title, string $description, int $enable, int $auteur_id, int $categorie_id, ?string $imageName): bool
 {
     global $db;
     try {
@@ -107,16 +107,17 @@ function createArticle(string $title, string $description, int $enable, int $aut
  * @param string $description
  * @return boolean
  */
-function updateArticle(int $id, string $title, string $description, int $enable, ?string $imageName): bool
+function updateArticle(int $id, string $title, string $description, int $enable, int $categorie_id, ?string $imageName): bool
 {
     global $db;
     try {
-        $query = "UPDATE article SET title = :title, description = :description, enable = :enable";
+        $query = "UPDATE article SET title = :title, description = :description, enable = :enable, categorie_id = :categorie_id";
         $params = [
             'id' => $id,
             'title' => $title,
             'description' => $description,
             'enable' => $enable,
+            'categorie_id' => $categorie_id,
         ];
 
         if ($imageName) {
