@@ -183,3 +183,42 @@ function deleteArticle(int $id): bool
     }
     return true;
 }
+
+function countArticles(): int {
+    global $db;
+    $sqlStatement = $db->prepare("SELECT COUNT(*) AS total FROM article");
+    $sqlStatement->execute();
+
+    $result = $sqlStatement->fetch(); //transforme la donnée qui ressort en tableau/objet pour etre exploité après
+   
+    return $result ? $result['total'] : 0;
+}
+
+function paginateArticle(int $maxPerPage, int $page = 1): array {
+
+    global $db;
+
+    $nbrPage = ceil(countArticles() / $maxPerPage); //divise total article par max par page, arrondi au superieur
+    
+    $start = ($page - 1) * $maxPerPage;
+
+    $query = "SELECT a.id, a.title, a.description, a.createdAt, a.enable, a.imageName,
+    u.firstName, u.lastName , c.title AS categTitle
+    FROM article a 
+    JOIN users u ON a.auteur_id = u.id
+    LEFT JOIN categories c ON a.categorie_id = c.id
+    LIMIT :maxPerPage 
+    OFFSET :start"; 
+    //offset permet de décaler le résultat à afficher (page 1 affiche de 0 à 2, page 2 affiche de 3 à 5...)
+    
+    $sqlStatement = $db->prepare($query);
+    $sqlStatement->execute([
+        'maxPerPage' => $maxPerPage,
+        'start' => $start,
+    ]);
+
+    return [
+        'nbrPage' => $nbrPage,
+        'data' => $sqlStatement->fetchAll(),
+    ];
+}

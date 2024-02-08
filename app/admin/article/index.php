@@ -41,7 +41,9 @@ $_SESSION['token'] = bin2hex(random_bytes(50));
             <h1 class="text-center">Admin des articles</h1>
             <a href="/admin/article/create.php" class="btn btn-primary">Créer un article</a>
             <div class="card-list">
-                <?php foreach (findAllArticlesWithAuthor() as $article) : ?>
+                <?php
+                $articles = paginateArticle(3, isset($_GET['page']) ? $_GET['page'] : 1); 
+                foreach ($articles['data'] as $article) : ?>
                     <div class="card">
                         <?php if ($article['imageName']) : ?>
                             <img src="/upload/articles/<?= $article['imageName']; ?>" alt="" loading="lazy">
@@ -63,6 +65,13 @@ $_SESSION['token'] = bin2hex(random_bytes(50));
                     </div>
                 <?php endforeach; ?>
             </div>
+            <nav class="pagination">
+                <ul class="pagination-links">
+                    <?php for($i=1; $i <= $articles['nbrPage']; $i++):?>
+                        <li class="pagination-link"><a href="?page=<?= $i;?>">Page <?= $i ;?></a></li>
+                    <?php endfor;?>
+                </ul>
+            </nav>
         </section>
     </main>
 </body>
